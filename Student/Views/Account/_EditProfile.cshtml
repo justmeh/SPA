@@ -1,0 +1,51 @@
+﻿@model Student.Models.EditProfileViewModel
+@{
+    ViewBag.Title = "_EditProfile";
+
+    Student.Models.ApplicationDbContext db = Student.Models.ApplicationDbContext.Create();
+
+    var uid = (int)Session["ID"];
+
+    var user = db.Users.Where(u => u.ID == uid).ToList()[0];
+
+    db.Dispose();
+}
+
+<div>
+
+    @using (Html.BeginForm("EditProfile", "Account", new { }, FormMethod.Post))
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label", style = "max-width:20%; color: black" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", Value = user.FirstName })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label", style = "max-width:20%; color: black" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", Value = user.LastName })
+            </div>
+        </div>
+        <p style="color:red;">@ViewBag.cnperror</p>
+        <div class="form-group">
+            @Html.LabelFor(m => m.CNP, new { @class = "col-md-2 control-label", style = "max-width:25%; color: black" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.CNP, new { @class = "form-control", Value = user.CNP })
+            </div>
+        </div>
+        <p style="color:red;">@ViewBag.emailerror</p>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label", style = "max-width:25%; color: black" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", Value = user.Email })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="form-button">Update profile</button>
+            </div>
+        </div>
+    }
+
+</div>

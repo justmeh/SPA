@@ -1,0 +1,80 @@
+﻿@if(Student.Models.User.LoggedIn() == true)
+{
+
+
+    int? id = Student.Models.User.getID();
+
+    Student.Models.ApplicationDbContext dbContext = Student.Models.ApplicationDbContext.Create();
+
+    List<Student.Models.Users_Projects> usersProjects = null;
+    List<Student.Models.Project> projects;
+
+    Student.Models.UserRole.roles userRole = dbContext.Roles.Where(m => m.UserID == id).ToList()[0].Role;
+
+
+    if (userRole == Student.Models.UserRole.roles.student || userRole == Student.Models.UserRole.roles.professor)
+    {
+        usersProjects = dbContext.UsersProjects.Where(m => m.UserID == id).ToList();
+
+        projects = new List<Student.Models.Project>();
+
+
+
+        for (int i=0;i<usersProjects.Count();++i)
+        {
+            int projectID = usersProjects[i].ProjectID;
+            projects.Add(dbContext.Projects.Where(m => m.ID == projectID).ToList()[0]);
+        }
+
+    }
+
+    else
+    {
+        projects = dbContext.Projects.ToList();
+
+    }
+
+    dbContext.Dispose();
+
+
+<table class="table  table-hover" style="color:rgb(255, 102, 0);">
+    <thead>
+        <tr>
+            <th style="width: 60%; text-align:center;">Projects</th>
+
+            @if (userRole == Student.Models.UserRole.roles.student)
+            {
+              <th style="width: 20%; text-align:center;">Mark</th>
+              <th style="width: 20%; text-align:center;">Deadline</th>
+            }
+
+        </tr>
+    </thead>
+
+
+
+    @for (int i = 0; i < projects.Count(); ++i)
+    {
+        <tbody>
+
+            <tr>
+                <td style="width: 60%; text-align:center;">@Html.ActionLink(@projects[i].Name.ToString(), "ViewProject", "Project", new { ID = projects[i].ID }, null)</td>
+
+                @if (userRole == Student.Models.UserRole.roles.student)
+                {
+                    if (usersProjects[i].Mark == 0)
+                    {
+                        <td style="width: 20%; text-align:center;">No mark</td>
+                    }
+                    else
+                    {
+                        <td style="width: 20%; text-align:center;">@usersProjects[i].Mark</td>
+                    }
+                    <td style="width: 20%; text-align:center;">@projects[i].Deadline</td>
+                }
+            </tr>
+        </tbody>
+    }
+
+</table>
+}

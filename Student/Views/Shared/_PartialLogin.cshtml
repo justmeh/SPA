@@ -1,0 +1,20 @@
+﻿@if (Student.Models.User.LoggedIn())
+{
+    <ul class="nav navbar-nav ml-auto">
+        <li class="dropdown">
+            <div>@Html.ActionLink("Hello " + Student.Models.User.getName() + "!", "Profile", "Account", routeValues: null, htmlAttributes: new { @class = "nav-link" })</div>
+            <ul class="dropdown-menu">
+                <li class="dropdown-button">@Html.ActionLink("Profile", "Profile", "Account")</li>
+                <li class="dropdown-button">@Html.ActionLink("Grades", "Grades", "Account")</li>
+                <li class="dropdown-button">@Html.ActionLink("Settings", "Settings", "Account")</li>
+                <li class="dropdown-button">@Html.ActionLink("Logout", "Logout", "Account")</li>
+            </ul>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav ml-auto">
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "nav-link", id = "loginLink" })</li>
+    </ul>
+}

@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<div>
+
+    <br /><br /><br />
+
+    <h2>@ViewBag.Title</h2>
+
+    <br /><br />
+
+    <p style="color:red;">@ViewBag.Message</p>
+
+    @using (Html.BeginForm("Login", "Account", new { }, FormMethod.Post))
+    {
+
+        <div class="form-group">
+            <label for="username" style="color:cornflowerblue">Username</label>
+            <input type="text" name="username" class="form-control" id="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password" style="color:cornflowerblue">Password</label>
+
+            <input type="password" name="password" class="form-control" id="password" required>
+        </div>
+
+        <button type="submit" class="button btn-primary" style="margin-right:50px">
+            Login
+        </button>
+
+    }
+</div>
+

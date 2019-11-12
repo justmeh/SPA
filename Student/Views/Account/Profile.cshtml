@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Profile";
+
+    Student.Models.ApplicationDbContext db = Student.Models.ApplicationDbContext.Create();
+
+    var uid = (int)Session["ID"];
+
+    var user = db.Users.Where(u => u.ID == uid).ToList()[0];
+
+    db.Dispose();
+}
+
+<div class="container">
+    <div class="row">
+        <div class=""><img src="~/Assets/user-icon.jpg" style="width:100px;height:100px;" /></div>
+        <div class=""><h1>@user.LastName @user.FirstName</h1></div>
+    </div>
+
+    <br/><br/>
+
+    @Html.Partial("_EditProfile")
+</div>

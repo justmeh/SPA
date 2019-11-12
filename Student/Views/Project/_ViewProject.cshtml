@@ -1,0 +1,156 @@
+﻿@using Student.Models;
+@{
+
+    int projectID = ViewBag.ID;
+
+}
+
+@if (Student.Models.User.LoggedIn())
+{
+    int? id = Student.Models.User.getID();
+
+    Student.Models.ApplicationDbContext dbContext = Student.Models.ApplicationDbContext.Create();
+
+    Student.Models.Project project = dbContext.Projects.Where(m => m.ID == projectID).ToList()[0];
+
+    <h2>@project.Name </h2>
+
+    if ((string)Session["Role"] != "student")
+    {
+        using (Html.BeginForm("SaveInformation", "Project", new { ID = project.ID }, FormMethod.Post, new { }))
+        {
+            <div class="form-group">
+                <label for="description" style="color:cornflowerblue">Description</label>
+
+                <textarea class="form-control" style="max-width: 100%;" name="description" id="description" rows="7" required>@project.Description.ToString()</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="deadline" style="color:cornflowerblue">Deadline</label>
+
+                <input class="form-control" type="date" style="max-width: 100%;" name="deadline" id="deadline" value="@project.Deadline.ToString("yyyy-MM-dd")" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-right:50px">
+                Save information
+            </button>
+        }
+
+        var usersProjects = dbContext.UsersProjects.Where(m => m.ProjectID == projectID).ToList();
+
+        <table class="table  table-hover" style="color:rgb(255, 102, 0);text-align:center;">
+            <thead>
+                <tr>
+                    <th style="width: 50%; text-align:center;">Student</th>
+
+                    <th style="width: 30%; text-align:center;">Status</th>
+
+                    <th style="width: 20%; text-align:center;">Mark</th>
+
+                </tr>
+            </thead>
+
+            @for (int i = 0; i < usersProjects.Count(); ++i)
+            {
+                int userID = usersProjects[i].UserID;
+
+                var role = dbContext.Roles.Where(r => r.UserID == userID).ToList()[0];
+
+                if(role.Role == Student.Models.UserRole.roles.student)
+                {
+                    var user = dbContext.Users.Where(m => m.ID == userID).ToList();
+
+                    <tr>
+
+                        <td style="width: 50%">@Html.ActionLink(user[0].FirstName + " " + user[0].LastName, "ViewAssigment", "Project", new { ID = usersProjects[i].UsersProjectsID }, null)</td>
+
+                        @if (usersProjects[i].Mark == 0)
+                        {
+                            <td style="width: 30%">
+                                <font color="red">No mark</font>
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="width: 30%">
+                                <font color="green">Marked</font>
+                            </td>
+
+                            <td style="width: 20%;">
+                                <font color="black">@usersProjects[i].Mark</font>
+                            </td>
+                        }
+
+                        
+                            
+                        
+
+                    </tr>
+
+                }
+            }
+        </table>
+
+        dbContext.Dispose();
+
+    }
+    else
+    {
+
+        <p style="color:cornflowerblue">Description</p>
+
+        <p>
+            @for (int i = 0; i < project.Description.Length; i++)
+            {
+                if (project.Description[i] == '\n')
+                {
+                    <br />
+                }
+                else
+                {
+                    @project.Description[i]
+                }
+            }
+        </p>
+
+        <br />
+        <br />
+
+        <p style="color:cornflowerblue">Deadline:</p>
+
+        <p>@project.Deadline</p>
+
+        <br />
+        <br />
+
+        Student.Models.Users_Projects userProj = dbContext.UsersProjects.Where(up => up.ProjectID == projectID && up.UserID == id).ToList()[0];
+
+        if (userProj.File != null)
+        {
+            <p>You have already uploaded a file</p>
+        }
+
+        @model SubmitModel
+        using (Html.BeginForm("SubmitProject", "SubmitProject", new { projectId = projectID, userId = id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            //< div >
+            @Html.LabelFor(x => x.File)
+            @Html.TextBoxFor(x => x.File, new { type = "file" })
+            @Html.ValidationMessageFor(x => x.File)
+            //</ div >
+
+            <br />
+
+            <button type="submit" class="btn btn-primary" style="margin-right:50px">
+                Submit Project
+            </button>
+        }
+
+        <br />
+
+        <br />
+
+        @Html.ActionLink("View comments","ViewAssigment","Project", new { ID =  userProj.UsersProjectsID }, new { @class="btn btn-primary" })
+    }
+
+}

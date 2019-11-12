@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+<div>
+
+    <br /><br /><br />
+
+    <h2>@ViewBag.Title</h2>
+
+    <br /><br />
+
+    <p style="color:red;">@ViewBag.Error</p>
+
+    @using (Html.BeginForm("AddUser", "Management", new { }, FormMethod.Post))
+    {
+
+        <div class="form-group">
+            <label for="username" style="color:cornflowerblue">Username</label>
+            <input type="text" name="username" class="form-control" id="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password" style="color:cornflowerblue">Password</label>
+
+            <input type="password" name="password" class="form-control" id="password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="firstName" style="color:cornflowerblue">First Name</label>
+
+            <input type="text" name="firstName" class="form-control" id="firstName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName" style="color:cornflowerblue">Last Name</label>
+
+            <input type="text" name="lastName" class="form-control" id="lastName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="cnp" style="color:cornflowerblue">CNP</label>
+
+            <input type="tel" name="cnp" class="form-control" id="cnp" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email" style="color:cornflowerblue">Email</label>
+
+            <input type="email" name="email" class="form-control" id="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="role" style="color:cornflowerblue">Role</label>
+            <select class="selectpicker" name="role" id="role">
+                <option>Student</option>
+                <option>Professor</option>
+                <option>Administrator</option>
+            </select>
+        </div>
+
+        <button type="submit" class="button btn-primary" style="margin-right:50px">
+            Add User
+        </button>
+
+    }
+
+    <br /><br />
+
+    @using (Html.BeginForm("DeleteUser", "Management", new { }, FormMethod.Post))
+    {
+
+        <div class="form-group">
+            <label for="username" style="color:cornflowerblue">Username</label>
+            <input type="search" name="username" class="form-control" id="username" required>
+        </div>
+
+        <button type="submit" class="button btn-primary" style="margin-right:50px">
+            Delete User
+        </button>
+
+    }
+    <br /><br />
+    @using (Html.BeginForm("AddProject", "Management", new { }, FormMethod.Post))
+    {
+
+        <div class="form-group">
+            <label for="projectName" style="color:cornflowerblue">Add Project</label>
+            <input type="text" name="projectName" class="form-control" id="projectName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="projectOptional" style="color:cornflowerblue">Optional course</label>
+            <input type="checkbox" name="projectOptional" class="form-control" id="projectOptional" checked="checked" value="true"/>
+        </div>
+
+        <button type="submit" class="button btn-primary" style="margin-right:50px">
+            Add Project
+        </button>
+
+    }
+    <br /><br />
+    @using (Html.BeginForm("DeleteProject", "Management", new { }, FormMethod.Post))
+    {
+
+        <div class="form-group">
+            <label for="projectName" style="color:cornflowerblue">Delete Project</label>
+            <input type="search" name="projectName" class="form-control" id="projectName" required>
+        </div>
+
+        <button type="submit" class="button btn-primary" style="margin-right:50px">
+            Delete Project
+        </button>
+
+    }
+    <br /><br />
+
+    @using (Html.BeginForm("SetProject", "Management", new { }, FormMethod.Post))
+    {
+
+        <div class="form-group">
+            <label for="username" style="color:cornflowerblue">User</label>
+            <input type="text" name="username" class="form-control" id="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="projectName" style="color:cornflowerblue">Project</label>
+            <input type="text" name="projectName" class="form-control" id="projectName" required>
+        </div>
+
+
+        <button type="submit" class="button btn-primary" style="margin-right:50px">
+            Set project
+        </button>
+
+    }
+
+</div>

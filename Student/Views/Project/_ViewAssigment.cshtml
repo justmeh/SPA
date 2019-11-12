@@ -1,0 +1,104 @@
+﻿@if (Student.Models.User.LoggedIn())
+{
+    Student.Models.ApplicationDbContext dbContext = Student.Models.ApplicationDbContext.Create();
+
+    int UsersProjectsID = ViewBag.ID;
+
+    var conversation = dbContext.UsersProjectsComments.Where(m => m.UsersProjectsID == UsersProjectsID).ToList();
+
+    var userProj = dbContext.UsersProjects.Where(up => up.UsersProjectsID == UsersProjectsID).ToList()[0];
+
+    Dictionary<int, List<Student.Models.User>> dict = new Dictionary<int, List<Student.Models.User>>();
+
+    Dictionary<int, Student.Models.UserRole.roles> roles = new Dictionary<int, Student.Models.UserRole.roles>();
+
+    if ((string)Session["Role"] == "student")
+    {
+
+    }
+    else
+    {
+        using (Html.BeginForm("DownloadProject", "SubmitProject", new { projectId = userProj.ProjectID, userId = userProj.UserID }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <br />
+
+            <button type="submit" class="btn btn-primary" style="margin-right:50px">
+                Download Project
+            </button>
+        }
+
+        <br/>
+
+        using (Html.BeginForm("GiveMark", "Project", new { ID = UsersProjectsID }, FormMethod.Post, new { }))
+        {
+            <div class="form-group">
+                <label for="mark" style="">Mark</label>
+                <select class="selectpicker" name="mark" id="givemark">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-right:50px">Give mark</button>
+        }
+    }
+
+    <br />
+
+    <h2>Comments</h2>
+
+
+    for (int i = 0; i < conversation.Count(); ++i)
+    {
+        int id = conversation[i].UserID;
+        if (dict.ContainsKey(id) == false)
+        {
+            dict[id] = dbContext.Users.Where(m => m.ID == id).ToList();
+
+            roles[id] = dbContext.Roles.Where(m => m.UserID == id).ToList()[0].Role;
+
+        }
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div style=" border-right: 1px solid #333; text-align:center;">
+                        <h3>@(dict[id][0].FirstName + " " + dict[id][0].LastName)</h3>
+
+                        <h4>@roles[id]</h4>
+                    </div>
+                </div>
+                <div class="col-sm-10">
+                    <div style="word-wrap:break-word;">
+                        <h4>@conversation[i].Comment</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+    <br />
+
+    using (Html.BeginForm("SubmitComment", "Project", new { userID = Student.Models.User.getID(), ID = UsersProjectsID }, FormMethod.Post, new { }))
+    {
+
+        <div class="form-group">
+            <textarea class="form-control" style="max-width: 100%;" name="comment" id="comment" rows="7" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-right:50px">
+            Submit Comment
+        </button>
+    }
+
+}
